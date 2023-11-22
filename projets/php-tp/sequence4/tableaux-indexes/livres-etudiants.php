@@ -20,13 +20,31 @@ $livres = [
 // Afficher pour chaque livre son titre, son auteur et son année de parution
 // Format d'affichage : "Titre" écrit par "Auteur" en "Année de parution"
 echo "------------ Liste des livres ------------".PHP_EOL;
-
-
+foreach ($livres as $livre) {
+    [$titre,$auteur,$datePublication,$genre,$isbn] = explode(":", $livre);
+    echo "$titre écrit par $auteur en $datePublication". PHP_EOL;
+}
 // Rechercher et afficher tous les livres écrits par un auteur donné
 // L'auteur est saisi par l'utilisateur (respecter la casse)
 // Format d'affichage : "Titre" ("Genre") écrit en "Année de parution"
 // Si aucun livre n'est trouvé, afficher "Aucun livre trouvé pour cet auteur"
 echo "------------ Recherche de livres par auteur ------------".PHP_EOL;
+
+$auteurUser = readline("Saisir un auteur : ");
+$livreAuteur = [];
+foreach ($livres as $livre) {
+    [$titre,$auteur,$datePublication,$genre,$isbn] = explode(":", $livre);
+    if (strtolower($auteur) == strtolower($auteurUser)) {
+        $livreAuteur[] = "$titre ($genre) écrit en $datePublication";
+    }
+}
+if (!empty($contactTrouve)) {
+    foreach ($livreAuteur as $livre) {
+        echo $livre;
+    }
+} else {
+    echo "Aucun livre trouvé pour cet auteur";
+}
 
 
 // Modifier l'année de parution d'un livre dont l'ISBN est saisi par l'utilisateur
@@ -34,6 +52,19 @@ echo "------------ Recherche de livres par auteur ------------".PHP_EOL;
 // Si l'ISBN n'est pas trouvé, afficher "ISBN non trouvé"
 // sinon afficher "L'année de parution a été modifiée avec succès et afficher la liste des livres mise à jour"
 echo "------------ Modification de l'année de parution ------------".PHP_EOL;
+
+$isbnUser = readline("Saisir un ISBN : ");
+$anneeUser = readline("Saisir une année de parution à changé : ");
+
+
+
+
+
+
+
+
+
+
 
 
 // Rechercher et afficher tous les livres publiés entre deux années spécifiques.
