@@ -9,3 +9,5 @@ require_once "requetes.php";
  * Test requête R7
 */
 
+$resultats = nombreArticlesParAuteur($ableArticles, $tableAuteurs);
+print_r($resultats);

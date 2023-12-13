@@ -56,10 +56,10 @@ function rechercherArticles (array $tableArticle, array $tableCategorie) : array
     return $resultats;
 }
 
-/* Requête R4
- * Récupérer les articles dont la date de création est supérieure à une date donnée
- * On souhaite récupérer l'id, le titre, le contenu, la date de création, le prénom et le nom de l'auteur de
- * chaque article
+    /* Requête R4
+     * Récupérer les articles dont la date de création est supérieure à une date donnée
+     * On souhaite récupérer l'id, le titre, le contenu, la date de création, le prénom et le nom de l'auteur de
+     * chaque article
 */
 // PLACER ICI VOTRE FONCTION
 function rechercherArticlesDate (array $tableArticle, array $tableAuteur, string $date) : array {
@@ -68,8 +68,12 @@ function rechercherArticlesDate (array $tableArticle, array $tableAuteur, string
         ["titre"=>$titre, "contenu"=>$contenu, "date_creation"=>$date_creation, "id_auteur"=>$id_auteur] = $resultat;
         foreach ($tableAuteur as $idAuteur => $auteur) {
                 if ($id_auteur == $idAuteur) {
-                    if ($date)
-                    array_push($resultats, $id, $contenu, $date_creation, $categorie);
+                    $date_creation = DateTime::createFromFormat('dd-mm-YYYY', $date_creation);
+                    $date = DateTime::createFromFormat('dd-mm-YYYY', $date);
+                    if ($date_creation > $date) {
+                        array_push($resultats, $id, $titre, $contenu, $date_creation, $idAuteur, $auteur);
+                    }
+
                 }
         }
     }
@@ -82,16 +86,77 @@ function rechercherArticlesDate (array $tableArticle, array $tableAuteur, string
  * On souhaite récupérer l'id, le titre, la date de création et le libellé de la catégorie de chaque article
 */
 // PLACER ICI VOTRE FONCTION
+function recupererArticlesOrdonnes($tableArticle, $tableCategorie)
+{
+    $articlesOrdonnes = $tableArticle;
+
+    // Utilisation de la fonction usort pour trier les articles par titre
+    usort($articlesOrdonnes, function ($a, $b) {  //trie le tableau par ordre croissant
+        return strcmp($a['titre'], $b['titre']);  //compare les valeurs
+    });
+
+    $resultats = [];
+
+    foreach ($articlesOrdonnes as $article) {
+        $idCategorie = $article['id_categorie'];
+        $categorie = $tableCategorie[$idCategorie];
+
+        // Ajouter les résultats à la liste
+        $resultats[] = [
+            'id_article' => $article['id_article'],
+            'titre' => $article['titre'],
+            'date_creation' => $article['date_creation'],
+            'libelle_categorie' => $categorie['libelle'],
+        ];
+    }
+
+    return $resultats;
+}
 
 
 /* Requête R6
  * Récupérer le nombre d'articles postés par un auteur donné (id_auteur)
 */
 // PLACER ICI VOTRE FONCTION
+function nombreArticlesParIdAuteur($idAuteur, $tableArticle)
+{
+    $nombreArticles = 0;
 
+    foreach ($tableArticle as $article) {
+        if ($article['id_auteur'] == $idAuteur) {
+            $nombreArticles++;
+        }
+    }
+
+    return $nombreArticles;
+}
 
 /* Requête R7
  * Récupérer le nombre d'articles postés par chaque auteur
  * On souhaite récupérer l'id, le prénom, le nom et le nombre d'articles ce chaque auteur
 */
 // PLACER ICI VOTRE FONCTION
+function nombreArticlesParAuteur($tableArticle, $tableAuteur)
+{
+    $resultats = [];
+
+    foreach ($tableAuteur as $idAuteur => $auteur) {
+        $nombreArticles = 0;
+
+        foreach ($tableArticle as $article) {
+            if ($article['id_auteur'] == $idAuteur) {
+                $nombreArticles++;
+            }
+        }
+
+        // Ajouter les résultats à la liste
+        $resultats[] = [
+            'id_auteur' => $idAuteur,
+            'prenom' => $auteur['prenom'],
+            'nom' => $auteur['nom'],
+            'nombre_articles' => $nombreArticles,
+        ];
+    }
+
+    return $resultats;
+}

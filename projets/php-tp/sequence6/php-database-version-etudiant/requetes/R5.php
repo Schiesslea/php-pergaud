@@ -8,5 +8,6 @@ require_once "requetes.php";
 /*
  * Test requête R5
 */
-
+$resultats  = recupererArticlesOrdonnes($tableArticles, $tableCategories);
+print_r($resultats);
 

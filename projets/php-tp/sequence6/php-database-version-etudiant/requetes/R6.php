@@ -10,4 +10,5 @@ require_once "requetes.php";
 */
 
 $auteurId = readline("Saisir l'id d'un auteur : ");
-
+$resultats = nombreArticlesParAuteur($auteurId, $tableArticles);
+print_r($resultats);
